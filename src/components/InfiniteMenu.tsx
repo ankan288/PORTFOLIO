@@ -841,15 +841,17 @@ class InfiniteGridMenu {
     Promise.all(
       this.items.map(
         item =>
-          new Promise<HTMLImageElement>(resolve => {
+          new Promise<HTMLImageElement | null>(resolve => {
             const img = new Image();
             img.crossOrigin = 'anonymous';
             img.onload = () => resolve(img);
-            img.src = item.image;
+            img.onerror = () => resolve(null);
+            img.src = `https://wsrv.nl/?url=${encodeURIComponent(item.image)}`;
           })
       )
     ).then(images => {
       images.forEach((img, i) => {
+        if (!img) return;
         const x = (i % this.atlasSize) * cellSize;
         const y = Math.floor(i / this.atlasSize) * cellSize;
         ctx.drawImage(img, x, y, cellSize, cellSize);
