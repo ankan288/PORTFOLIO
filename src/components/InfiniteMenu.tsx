@@ -807,7 +807,7 @@ class InfiniteGridMenu {
     );
 
     this.icoGeo = new IcosahedronGeometry();
-    this.icoGeo.subdivide(1).spherize(this.SPHERE_RADIUS);
+    this.icoGeo.subdivide(2).spherize(this.SPHERE_RADIUS);
     this.instancePositions = this.icoGeo.vertices.map(v => v.position);
     this.DISC_INSTANCE_COUNT = this.icoGeo.vertices.length;
     this.initDiscInstances(this.DISC_INSTANCE_COUNT);
@@ -930,8 +930,10 @@ class InfiniteGridMenu {
     const gl = this.gl;
 
     gl.useProgram(this.discProgram);
-    gl.enable(gl.CULL_FACE);
+    gl.disable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
